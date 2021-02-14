@@ -1,54 +1,17 @@
 from typing import List, Dict
 from math import log
-
-
-dataset = [
-    70,
-    99,
-    36,
-    27,
-    81,
-    61,
-    72,
-    26,
-    56,
-    98,
-    26,
-    33,
-    92,
-    73,
-    45,
-    42,
-    97,
-    48,
-    99,
-    93,
-    49,
-    80,
-    22,
-    58,
-    75,
-    49,
-    74,
-    67,
-    72,
-    71,
-    73,
-    82,
-    52,
-    62,
-    72,
-]
+from tabulate import tabulate 
 
 
 class DescriptiveTable:
+
     def __init__(self, dataset: List, decimal_places: int, *args, **kwargs):
 
         self.dataset = dataset
         self.decimal_places = decimal_places
+        self._table = {}
         self._number_classes = self.sturges_rule()
         self._amplitude = self.amplitude_classes()
-        self._classes = self.generate_classes()
 
     def amplitude_classes(self) -> int:
         """Método para retornar a amplitude de classes.
@@ -74,25 +37,21 @@ class DescriptiveTable:
             dict -- lista com as classes
         """
         limite_inferior = min(self.dataset)
-        classes = {}
+        classes = []
         for i in range(1, self._number_classes+1):
-            classes[i] = (
+            classes.append((
                 round(limite_inferior, self.decimal_places),
                 round(
                     (limite_inferior + self._amplitude), self.decimal_places
-                    ),
+                    )),
                     )
             limite_inferior += self._amplitude
+        self._table["Classes"] = classes
         return classes
+
+    def generate_table(self):
+
+        print(tabulate(self._table, headers="keys", tablefmt="fancy_grid"))
 
     def __repr__(self):
         return "Classe Tabela descritiva"
-
-
-if __name__ == "__main__":
-    table = DescriptiveTable(dataset, 3)
-    print(
-        f"Aplitude: {table._amplitude}, "
-        f"Némero de classes: {table._number_classes} e "
-        f"classes: {table._classes}"
-    )
