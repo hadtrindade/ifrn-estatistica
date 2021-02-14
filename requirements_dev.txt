@@ -5,3 +5,4 @@ tabulate==0.8.7
 prompt-toolkit==3.0.14
 lxml==4.6.2
 pytest-cov==2.11.1
+flake8
