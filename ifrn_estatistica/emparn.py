@@ -5,7 +5,6 @@ from requests import get
 
 
 class Emparn:
-
     def __init__(self, city_code):
         self.city_code = city_code
         self.current_year = today().year

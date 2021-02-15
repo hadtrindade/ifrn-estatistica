@@ -28,9 +28,7 @@ setup(
     keywords="tabela descritiva",
     url=URL,
     description=DESCRIPTION,
-    packeges=find_packages(
-        exclude=["tests"]
-        ),
+    packeges=find_packages(exclude=["tests"]),
     include_package_data=True,
     install_requires=read("requirements.txt"),
     extras_require={"dev": read("requirements_dev.txt")},
@@ -42,8 +40,7 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.8",
         "Framework :: Pytest",
-        "Topic :: Software Development :: Testing :: Unit"
-
+        "Topic :: Software Development :: Testing :: Unit",
     ],
     zip_safe=False,
 )
