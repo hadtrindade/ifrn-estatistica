@@ -96,6 +96,7 @@ def test_percentual(descriptive_table, value):
     descriptive_table.percentage()
     assert value in descriptive_table._table["%"]
 
+
 @pytest.mark.parametrize("value", [51.48, 82.44, 144.0, 246.96, 298.44, 360.0])
 def test_angulo(descriptive_table, value):
     descriptive_table.angle()
