@@ -1,10 +1,10 @@
 from typing import List
-from math import log
+from math import log, sqrt
 from tabulate import tabulate
 
 
 class DescriptiveTable:
-    def __init__(self, dataset: List, decimal_places: int, *args, **kwargs):
+    def __init__(self, dataset: List, decimal_places: int):
 
         self.dataset = dataset
         self.decimal_places = decimal_places
@@ -179,8 +179,194 @@ class DescriptiveTable:
         self._table["Ang"] = angle_values
         return angle_values
 
-    def generate_table(self):
+    def fci(self) -> List:
+        """Método para geração de valores para grafico suavisado.
 
+            Return:
+            list -- valores do grafico suavisado.
+        """
+        fi = self.simple_frequency()
+        fci = list()
+        for i in range(self._number_classes):
+            if i == 0:
+                fci.append(((2 * fi[i]) + fi[(i + 1)]) / 4)
+            else:
+                try:
+                    fci.append(((fi[(i - 1)] + (2 * fi[i]) + fi[(i + 1)]) / 4))
+                except IndexError:
+                    fci.append((fi[(i - 1)] + 2 * fi[i]) / 4)
+        self._table["FCI"] = fci
+        return fci
+
+    def weighted_average(self):
+        """Método para retorno de XIFI.
+
+        Return:
+            list -- lista com os valores de XIFI
+        """
+        xi = self.middle_point()
+        fi = self.simple_frequency()
+        xifi = list()
+        for i in range(self._number_classes):
+            xifi.append(round(xi[i] * fi[i], self.decimal_places))
+        self._table["XIFI"] = xifi
+        return xifi
+
+    def v0(self) -> float:
+        """Método para geração de V0.
+            Returns:
+            float -- v0 value.
+        """
+        xi = self.middle_point()
+        fi = self.simple_frequency()
+        v0 = list()
+        for i in range(len(xi)):
+            v0.append(round(abs((xi[i] - fi[i])), self.decimal_places))
+        self._table["V0"] = v0
+        return v0
+
+    def v1(self) -> float:
+        """Método para geração de V1
+        Return:
+            v1 -- v1 value
+        """
+        xi = self.middle_point()
+        fi = self.simple_frequency()
+        v1 = list()
+        for i in range(len(xi)):
+            v1.append(round(abs((xi[i] - fi[i])) * fi[i], self.decimal_places))
+        self._table["V1"] = v1
+        return v1
+
+    def v2(self) -> float:
+        """Método para o retorno de V2
+            Return:
+                float -- value v2
+        """
+        xi = self.middle_point()
+        fi = self.simple_frequency()
+        v2 = list()
+        for i in range(len(xi)):
+            v2.append(
+                round(abs((xi[i] - fi[i])) ** 2 * fi[i], self.decimal_places)
+            )
+        self._table["V2"] = v2
+        return v2
+
+    def get_varience(self):
+        """Método para geração da variancia.
+            Returns:
+                float -- valor da variancia.
+        """
+        sum_v2 = sum(self.v2())
+        variancia = round(
+            (sum_v2 / (len(self.dataset) - 1)), self.decimal_places
+        )
+        self._table["Variancia"] = [round(variancia, self.decimal_places)]
+        return round(variancia, self.decimal_places)
+
+    def standard_deviation(self) -> float:
+        """Método para geração do desvio padrão.
+
+        Returns:
+            float -- valor do desvio padrão.
+        """
+        variance = self.get_varience()
+        std_dev = round(sqrt(variance), self.decimal_places)
+        self._table["Desvio Padrão"] = [std_dev]
+        return std_dev
+
+    def get_average(self) -> float:
+        """Método para calculara média.
+            Return:
+            float -- valor da média.
+        """
+        xifi = self.weighted_average()
+        average = round(sum(xifi) / len(self.dataset), self.decimal_places)
+        self._table["Media"] = [average]
+        return average
+
+    def get_moda(self) -> float:
+        """Método para geração da moda.
+            Returns:
+                float -- valor da moda
+        """
+        classes = self.classes()
+        avarege = self.get_average()
+        fi = self.simple_frequency()
+        for cm in range(self._number_classes):
+            if avarege >= classes[cm][0] and avarege < classes[cm][1]:
+                if cm == 0:
+                    moda = round(
+                        classes[cm][0]
+                        + ((fi[cm]) / ((2 * fi[cm]) - fi[(cm + 1)]))
+                        * self._amplitude,
+                        self.decimal_places,
+                    )
+                else:
+                    try:
+                        moda = round(
+                            classes[cm][0]
+                            + (
+                                (fi[cm] - fi[(cm - 1)])
+                                / (
+                                    (2 * fi[cm])
+                                    - (fi[(cm - 1)] + fi[(cm + 1)])
+                                )
+                            )
+                            * self._amplitude,
+                            self.decimal_places,
+                        )
+                    except IndexError:
+                        moda = round(
+                            classes[cm][0]
+                            + (
+                                (fi[cm] - fi[(cm - 1)])
+                                / ((2 * fi[cm]) - (fi[(cm - 1)]))
+                            )
+                            * self._amplitude,
+                            self.decimal_places,
+                        )
+        self._table["MODA"] = [moda]
+        return round(moda, self.decimal_places)
+
+    def get_median(self):
+        """Método para geração de médiana
+            Return:
+                float -- valor da mediana
+        """
+        classes = self.classes()
+        fi = self.simple_frequency()
+        h = self._amplitude
+        Fi = self.cumulative_frequency()
+        cmd = sum(fi) / 2
+        median = 0
+        for icmd in range(len(Fi)):
+            if icmd == 0:
+                if 0 <= cmd <= Fi[icmd]:
+                    median = classes[icmd][0] + ((cmd / fi[icmd]) * h)
+            if Fi[(icmd - 1)] <= cmd <= Fi[icmd]:
+                median = classes[icmd][0] + (
+                    ((cmd - Fi[(icmd - 1)]) / fi[icmd]) * h
+                )
+        self._table["Mediana"] = [round(median, self.decimal_places)]
+        return round(median, self.decimal_places)
+
+    def generate_table(self):
+        self.classes()
+        self.simple_frequency()
+        self.cumulative_frequency()
+        self.simple_relative_frequency()
+        self.cumulative_relative_frequency()
+        self.middle_point()
+        self.percentage()
+        self.angle()
+        self.v0()
+        self.v1()
+        self.v2()
+        self.get_moda()
+        self.get_varience()
+        self.get_median()
         print(tabulate(self._table, headers="keys", tablefmt="fancy_grid"))
 
     def __repr__(self):
