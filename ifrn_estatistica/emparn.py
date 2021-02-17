@@ -1,5 +1,5 @@
 from asyncio import gather, run
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 from copy import deepcopy
 from urllib.parse import urljoin
 from datetime import date
@@ -34,6 +34,7 @@ class Emparn:
         ]
 
     def get_city_data(self) -> Tuple:
+
         """Método para scriping de dados das cidades.
            Returns:
                 Tuple - tupla com dois dicts um com links
@@ -57,7 +58,7 @@ class Emparn:
                 dataset.append((scraping_url, scraping_accumulated))
             city_dataset[self.cities[i].upper()] = deepcopy(dataset)
             del dataset[:]
-
+        # import ipdb; ipdb.set_trace()
         links = {}
         links_tmp = []
         accumulated = {}
@@ -85,7 +86,12 @@ class Emparn:
 
         return links, accumulated
 
-    def raw_city_data(self):
+    def raw_city_data(self) -> Dict:
+
+        """Método para scriping de dados brutos das cidades.
+           Returns:
+                Dict - dicionário com os dados burtos das cidades.
+        """
 
         links, _ = self.get_city_data()
         data = run(
@@ -141,3 +147,7 @@ class Emparn:
 
     def __repr__(self):
         return "Class Emparn"
+
+
+"""e = Emparn(["NATAL"], starting_year=2020, keep=True)
+print(e.get_urls_accumulated())"""
