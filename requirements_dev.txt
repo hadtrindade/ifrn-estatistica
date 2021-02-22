@@ -8,3 +8,4 @@ pytest-cov==2.11.1
 pytest-mock==3.5.1
 flake8==3.8.4
 matplotlib==3.3.4
+parsel==1.6.0

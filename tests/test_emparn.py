@@ -1,5 +1,4 @@
 import pytest
-from asyncio import Future
 from unittest.mock import AsyncMock
 from ifrn_estatistica.emparn import Emparn
 
@@ -12,9 +11,7 @@ class Data:
 def emparn(mocker):
     d = Data()
     async_mock = AsyncMock(return_value=[d])
-    mocker.patch(
-        "ifrn_estatistica.emparn.Emparn.get_dataset", side_effect=async_mock
-    )
+    mocker.patch("ifrn_estatistica.emparn.get_dataset", side_effect=async_mock)
 
     e = Emparn(["NATAL"], starting_year=2020, keep=True)
     return e
@@ -28,7 +25,7 @@ def emparn(mocker):
                 "http://meteorologia.emparn.rn.gov.br:8181/monitoramento/2020/graficos/d8101.html"
             ]
         },
-        {"NATAL": {2020: "2161.2"}},
+        {"NATAL": {2020: 2161.2}},
     ],
 )
 def test_get_city_data(emparn, value):
