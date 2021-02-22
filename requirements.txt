@@ -1,8 +1,8 @@
-numpy==1.20.1
-pandas==1.2.2
-tabulate==0.8.7
-prompt-toolkit==3.0.14
-lxml==4.6.2
-parsel==1.6.0
-httpx==0.16.1
-matplotlib==3.3.4
+numpy
+pandas
+tabulate
+prompt-toolkit
+lxml
+parsel
+httpx
+matplotlib
