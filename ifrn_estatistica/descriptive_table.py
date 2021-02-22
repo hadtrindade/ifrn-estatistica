@@ -1,10 +1,27 @@
-from typing import List
+from typing import List, NoReturn
 from math import log, sqrt
 from tabulate import tabulate
 
 
 class DescriptiveTable:
+
+    """Geração de dados da tebela descritiva.
+
+    exemple:
+    from ifrn_estatistica.descriptive_table import DescriptiveTable
+
+
+    table = DescriptiveTable(dataset, 3)
+    table.generate_table()
+    """
+
     def __init__(self, dataset: List, decimal_places: int):
+
+        """Inicia o obj com uma dataset e define as casas decimais.
+
+        :param dataset: lista com os dados a serem processados
+        :param decimal_places: número de casas decimais
+        """
 
         self.dataset = dataset
         self.decimal_places = decimal_places
@@ -14,8 +31,8 @@ class DescriptiveTable:
 
     def amplitude_classes(self) -> int:
         """Método para retornar a amplitude de classes.
-            Return:
-            int - aplitude de classes
+
+        :return: int
         """
 
         at = max(self.dataset) - min(self.dataset)
@@ -24,16 +41,15 @@ class DescriptiveTable:
     def sturges_rule(self) -> int:
 
         """Método para retornar a numero de classes.
-            Return:
-            int - numero de classes
+
+        :return: int
         """
         return round(1 + 3.322 * log(len(self.dataset), 10))
 
     def classes(self) -> List:
         """Método para geração das classes da tabela descritiva.
 
-        Return:
-            list -- lista com as classes
+        :return: list
         """
         limite_inferior = min(self.dataset)
         classes = []
@@ -54,8 +70,7 @@ class DescriptiveTable:
     def simple_frequency(self) -> List:
         """Método para geração do frequencia simples "fi".
 
-            Return:
-                list - lista com as classes
+        :return: list
         """
         classes = self.classes()
         fi = list()
@@ -75,8 +90,7 @@ class DescriptiveTable:
     def cumulative_frequency(self) -> List:
         """Método para geranção a frequencia acumulada.
 
-            Returns:
-            list -- lista com a frequencia acumulada
+        :return: list
         """
         fi = self.simple_frequency()
         Fi = list()
@@ -90,8 +104,8 @@ class DescriptiveTable:
 
     def simple_relative_frequency(self) -> List:
         """Método para geração da frequencia relativa simples "fri".
-            Return:
-                list -- list com a frequencia relativa simples.
+
+        :return: list
         """
         fi = self.simple_frequency()
         fri = list()
@@ -111,9 +125,7 @@ class DescriptiveTable:
 
         """Método para retorno da frenquencia relativa acumulada "Fri".
 
-
-            Returns:
-                [list] -- lista com os valores da frenquancia relativa acumulada.
+        :return: list
         """
         fi = self.simple_frequency()
         fri = self.simple_relative_frequency()
@@ -131,8 +143,7 @@ class DescriptiveTable:
     def middle_point(self) -> List:
         """Método para geração dos pontos médios.
 
-            Returns:
-            list -- lista com os pontos médios.
+        :return: list
         """
         classes = self.classes()
         xi = list()
@@ -146,8 +157,7 @@ class DescriptiveTable:
     def percentage(self) -> List:
         """Método para geração do percentual "%".
 
-            Returns:
-                list -- lista com os valores do percentual
+        :return: list
         """
         fri = self.simple_relative_frequency()
         percentage_values = list()
@@ -166,8 +176,7 @@ class DescriptiveTable:
     def angle(self) -> List:
         """Método para geração dos angulos "Ang".
 
-            Returns:
-                [list] -- lista com as valores dos angulos
+        :return: list
         """
         Fri = self.cumulative_relative_frequency()
         angle_values = list()
@@ -182,8 +191,7 @@ class DescriptiveTable:
     def fci(self) -> List:
         """Método para geração de valores para grafico suavisado.
 
-            Return:
-            list -- valores do grafico suavisado.
+        :return: list
         """
         fi = self.simple_frequency()
         fci = list()
@@ -201,8 +209,7 @@ class DescriptiveTable:
     def weighted_average(self):
         """Método para retorno de XIFI.
 
-        Return:
-            list -- lista com os valores de XIFI
+        :return: list
         """
         xi = self.middle_point()
         fi = self.simple_frequency()
@@ -214,8 +221,8 @@ class DescriptiveTable:
 
     def v0(self) -> float:
         """Método para geração de V0.
-            Returns:
-            float -- v0 value.
+
+        :return: list
         """
         xi = self.middle_point()
         fi = self.simple_frequency()
@@ -227,49 +234,50 @@ class DescriptiveTable:
 
     def v1(self) -> float:
         """Método para geração de V1
-        Return:
-            v1 -- v1 value
+
+        :return: list
         """
         xi = self.middle_point()
         fi = self.simple_frequency()
         v1 = list()
         for i in range(len(xi)):
-            v1.append(round(abs((xi[i] - fi[i])) * fi[i], self.decimal_places))
+            v1.append(
+                round((abs((xi[i] - fi[i])) * fi[i]), self.decimal_places)
+            )
         self._table["V1"] = v1
         return v1
 
-    def v2(self) -> float:
+    def v2(self) -> List:
         """Método para o retorno de V2
-            Return:
-                float -- value v2
+
+        :return: list
         """
         xi = self.middle_point()
         fi = self.simple_frequency()
         v2 = list()
         for i in range(len(xi)):
             v2.append(
-                round(abs((xi[i] - fi[i])) ** 2 * fi[i], self.decimal_places)
+                round((abs((xi[i] - fi[i])) ** 2 * fi[i]), self.decimal_places)
             )
         self._table["V2"] = v2
         return v2
 
-    def get_varience(self):
+    def get_varience(self) -> List:
         """Método para geração da variancia.
-            Returns:
-                float -- valor da variancia.
+
+        :return: list
         """
         sum_v2 = sum(self.v2())
         variancia = round(
             (sum_v2 / (len(self.dataset) - 1)), self.decimal_places
         )
-        self._table["Variancia"] = [round(variancia, self.decimal_places)]
+        self._table["Variância"] = [round(variancia, self.decimal_places)]
         return round(variancia, self.decimal_places)
 
     def standard_deviation(self) -> float:
         """Método para geração do desvio padrão.
 
-        Returns:
-            float -- valor do desvio padrão.
+        :return: list
         """
         variance = self.get_varience()
         std_dev = round(sqrt(variance), self.decimal_places)
@@ -278,8 +286,8 @@ class DescriptiveTable:
 
     def get_average(self) -> float:
         """Método para calculara média.
-            Return:
-            float -- valor da média.
+
+        :return: float
         """
         xifi = self.weighted_average()
         average = round(sum(xifi) / len(self.dataset), self.decimal_places)
@@ -288,8 +296,8 @@ class DescriptiveTable:
 
     def get_moda(self) -> float:
         """Método para geração da moda.
-            Returns:
-                float -- valor da moda
+
+        :return: float
         """
         classes = self.classes()
         avarege = self.get_average()
@@ -330,10 +338,10 @@ class DescriptiveTable:
         self._table["MODA"] = [moda]
         return round(moda, self.decimal_places)
 
-    def get_median(self):
+    def get_median(self) -> float:
         """Método para geração de médiana
-            Return:
-                float -- valor da mediana
+
+        :return: float
         """
         classes = self.classes()
         fi = self.simple_frequency()
@@ -352,22 +360,12 @@ class DescriptiveTable:
         self._table["Mediana"] = [round(median, self.decimal_places)]
         return round(median, self.decimal_places)
 
-    def generate_table(self):
-        self.classes()
-        self.simple_frequency()
-        self.cumulative_frequency()
-        self.simple_relative_frequency()
-        self.cumulative_relative_frequency()
-        self.middle_point()
-        self.percentage()
-        self.angle()
-        self.v0()
-        self.v1()
-        self.v2()
-        self.get_moda()
-        self.get_varience()
-        self.get_median()
+    def generate_table(self) -> NoReturn:
+        """Método para geração da tabela descritiva.
+
+        :return: None
+        """
         print(tabulate(self._table, headers="keys", tablefmt="fancy_grid"))
 
     def __repr__(self):
-        return "Classe Tabela descritiva"
+        return "Classe DescriptiveTable"

@@ -4,18 +4,36 @@ from typing import NoReturn, List
 
 class PlottingGraphs:
 
-    """Classe para  geração de graficos.
+    """Geração de graficos.
 
-        Arguments:
-            classes: list -- lista com as classes
-            percentages: list -- lista com os valores percentuais
-            fci: list -- lista com os valores percentuais
-        Returns: None
+    exemple:
+
+        from ifrn_estatistica.descriptive_table import DescriptiveTable
+        from ifrn_estatistica.plotting_graphs import PlottingGraphs
+
+
+        table = DescriptiveTable(dataset, 3)
+        classes = table.classes()
+        percentages = table.percentage()
+        fci = table.fci()
+
+        plot = PlottingGraphs(dataset, classes, percentages, fci)
+        plot.simple_graph()
+        plot.histogram_chart()
+        plot.histogram_chart_bars()
+        plot.pie_chart()
     """
 
     def __init__(
         self, dataset: List, classes: List, percentages: List, fci: List
     ):
+        """Inicia o obj para geração dos gráficos.
+
+        :param dataset: list com os dados para geração de histograma
+        :param classes: lista com os nomes das classes
+        :param percentages: lista com as porcentagens.
+        :param fci: lista com as porcentagens "fci"
+        """
         self.dataset = dataset
         self.classes = classes
         self.percentages = percentages
@@ -30,7 +48,8 @@ class PlottingGraphs:
 
     def histogram_chart(self,) -> NoReturn:
         """Método para geração de grafico histograma.
-            Return: None
+
+        :return: None
         """
         name_classes = self._class_names()
         pyplot.hist(self.dataset, bins=len(name_classes), rwidth=0.95)
@@ -39,7 +58,8 @@ class PlottingGraphs:
 
     def simple_graph(self) -> NoReturn:
         """Método para geração de grafico simples.
-            Return: None
+
+        :return: None
         """
         name_classes = self._class_names()
         pyplot.plot(self.percentages, label="FPI")
@@ -56,7 +76,8 @@ class PlottingGraphs:
 
     def pie_chart(self) -> NoReturn:
         """Método para geração de grafico pizza.
-            Return: None
+
+        :return: None
         """
         name_classes = self._class_names()
         pyplot.pie(self.percentages, autopct="%1.1f%%", startangle=90)
@@ -71,7 +92,8 @@ class PlottingGraphs:
 
     def histogram_chart_bars(self) -> NoReturn:
         """Método para geração de grafico histograma com barras.
-            Returns: None
+
+        :return: None
         """
         name_classes = self._class_names()
         pyplot.bar(

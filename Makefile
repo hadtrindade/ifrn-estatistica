@@ -16,5 +16,5 @@ install:
 
 
 test:
-	pytest tests/ -v --cov=ifrn_estatistica
+	pytest  -s tests/ -v --cov=ifrn_estatistica
 

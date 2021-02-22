@@ -37,7 +37,6 @@ jobs:
     - name: Test with pytest
       run: |
         pytest tests/ -v --cov=ifrn_estatistica
-        
     - name: codecov
       run: |
         codecov
