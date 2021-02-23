@@ -172,10 +172,12 @@ class Emparn:
 
         selector = Selector(text=data)
         scraping_url = selector.xpath(
-            f"//body/p//td[contains(text(),'{city.upper()}')]/following-sibling::td[5]/a/@href"
+            "//body/p//td[contains(text(),"
+            f"'{city.upper()}')]/following-sibling::td[5]/a/@href"
         ).get()
         scraping_accumulated = selector.xpath(
-            f"//body/p//td[contains(text(),'{city.upper()}')]/following-sibling::td[1]/text()"
+            f"//body/p//td[contains(text(),"
+            f"'{city.upper()}')]/following-sibling::td[1]/text()"
         ).get()
         if isinstance(scraping_accumulated, list):
             for i in len(scraping_accumulated):
@@ -211,10 +213,12 @@ class Emparn:
                 if year > 2011:
                     content = html.fromstring(d.content)
                     scraping_url = content.xpath(
-                        f"//td[text()>0]/../td[contains(text(),'{self.cities[i].upper()}')]/following-sibling::td/a/@href"
+                        "//td[text()>0]/../td[contains(text(),"
+                        f"'{self.cities[i].upper()}')]/following-sibling::td/a/@href"
                     )[3]
                     resp = content.xpath(
-                        f"//td[text()>0]/../td[contains(text(),'{self.cities[i].upper()}')]/following-sibling::td/text()"
+                        "//td[text()>0]/../td[contains(text(),"
+                        f"'{self.cities[i].upper()}')]/following-sibling::td/text()"
                     )
                     scraping_accumulated = sum([float(v) for v in resp]) / len(
                         resp
@@ -279,10 +283,9 @@ class Emparn:
         dataset_months = []
         for city in self.cities:
             for year in range(self.starting_year, self.final_year):
+                months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
                 if year % 4 == 0:
                     months = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-                else:
-                    months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
                 content = html.fromstring(data[count_data].content)
                 scraping = content.xpath("//td[text()>=0 or text()<0]/text()")
                 month_counter = 0
