@@ -6,7 +6,7 @@ from ifrn_estatistica.emparn import Emparn
 def get_dataset_scraping():
 
     emparn = Emparn(
-        ["NATAL", "MOSSORO", "CAICO", "ASSU"], starting_year=1992, keep=True
+        ["NATAL", "MOSSORO", "CAICO", "ASSU", "PAU DOS FERROS"], keep=True
     )
 
     _, datasets = emparn.get_city_data()
@@ -21,14 +21,30 @@ def gen_table(datasets):
         "MOSSORO": [float(v) for v in datasets["MOSSORO"].values()],
         "CAICO": [float(v) for v in datasets["CAICO"].values()],
         "ASSU": [float(v) for v in datasets["ASSU"].values()],
+        "PAU DOS FERROS": [
+            float(v) for v in datasets["PAU DOS FERROS"].values()
+        ],
     }
 
     for k in dict_dataset.keys():
         print(k)
         table = DescriptiveTable(dict_dataset[k], 3)
         classes = table.classes()
+        table.simple_frequency()
+        table.cumulative_frequency()
+        table.simple_relative_frequency()
+        table.cumulative_relative_frequency()
+        table.middle_point()
         porcentagem = table.percentage()
         fci = table.fci()
+        table.angle()
+        table.v0()
+        table.v1()
+        table.v2()
+        table.get_moda()
+        table.get_varience()
+        table.get_median()
+        table.standard_deviation()
         table.generate_table()
 
         plot = PlottingGraphs(
@@ -39,6 +55,7 @@ def gen_table(datasets):
         )
 
         plot.histogram_chart_bars()
+        plot.histogram_chart()
         plot.pie_chart()
 
 
