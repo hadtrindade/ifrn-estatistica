@@ -4,7 +4,7 @@ from ifrn_estatistica.plotting_graphs import PlottingGraphs
 
 
 def get_dataset():
-    data = read_csv("2021-02-22_accumulated.csv")
+    data = read_csv("2021-04-14_accumulated.csv")
 
     return {k: list(v.values) for k, v in data.items() if k != "Unnamed: 0"}
 
@@ -23,9 +23,9 @@ def gen_table(dict_dataset):
         porcentagem = table.percentage()
         fci = table.fci()
         table.angle()
-        table.v0()
-        table.v1()
-        table.v2()
+        table.deviation()
+        table.deviation_v1()
+        table.deviation_v2()
         table.get_moda()
         table.get_varience()
         table.get_median()

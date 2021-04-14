@@ -1,5 +1,6 @@
 from typing import List, NoReturn
 from math import log, sqrt
+import numpy as np
 from tabulate import tabulate
 
 
@@ -219,60 +220,58 @@ class DescriptiveTable:
         self._table["XIFI"] = xifi
         return xifi
 
-    def v0(self) -> float:
-        """Método para geração de V0.
+    def deviation(self) -> float:
+        """Método para geração do desvio.
 
         :return: list
         """
         xi = self.middle_point()
-        fi = self.simple_frequency()
-        v0 = list()
+        x = self.get_average()
+        v0 = []
         for i in range(len(xi)):
-            v0.append(round(abs((xi[i] - fi[i])), self.decimal_places))
-        self._table["V0"] = v0
+            v0.append(round(abs((xi[i] - x)), self.decimal_places))
+        self._table["|X - XI|"] = v0
         return v0
 
-    def v1(self) -> float:
-        """Método para geração de V1
+    def deviation_v1(self) -> float:
+        """Método para geração de deviation_V1
 
         :return: list
         """
-        xi = self.middle_point()
-        fi = self.simple_frequency()
-        v1 = list()
-        for i in range(len(xi)):
-            v1.append(
-                round((abs((xi[i] - fi[i])) * fi[i]), self.decimal_places)
-            )
-        self._table["V1"] = v1
+        v0 = self.deviation()
+        v1 = []
+        for i in range(len(v0)):
+            v1.append(np.around((v0[i] ** 2), decimals=self.decimal_places))
+        self._table["(X - XI)²"] = v1
         return v1
 
-    def v2(self) -> List:
-        """Método para o retorno de V2
+    def deviation_v2(self) -> List:
+        """Método para o retorno de deviation_V2
 
         :return: list
         """
-        xi = self.middle_point()
         fi = self.simple_frequency()
-        v2 = list()
-        for i in range(len(xi)):
-            v2.append(
-                round((abs((xi[i] - fi[i])) ** 2 * fi[i]), self.decimal_places)
-            )
-        self._table["V2"] = v2
+        v1 = self.deviation_v1()
+        v2 = []
+        for i in range(len(fi)):
+            v2.append(np.around((v1[i] * fi[i]), decimals=self.decimal_places))
+        self._table["(X - XI)²*fi"] = v2
         return v2
 
-    def get_varience(self) -> List:
+    def get_varience(self, sample=True) -> List:
         """Método para geração da variancia.
-
+        :param sample: default true para calcular a variancia amostral
         :return: list
         """
-        sum_v2 = sum(self.v2())
-        variancia = round(
-            (sum_v2 / (len(self.dataset) - 1)), self.decimal_places
+        fi_sum = (
+            (sum(self.simple_frequency()) - 1)
+            if sample
+            else sum(self.simple_frequency())
         )
-        self._table["Variância"] = [round(variancia, self.decimal_places)]
-        return round(variancia, self.decimal_places)
+        v2_sum = sum(self.deviation_v2())
+        variance = round((v2_sum / fi_sum), self.decimal_places)
+        self._table["Variância"] = [variance]
+        return variance
 
     def standard_deviation(self) -> float:
         """Método para geração do desvio padrão.

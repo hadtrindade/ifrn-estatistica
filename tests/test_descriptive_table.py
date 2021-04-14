@@ -103,42 +103,42 @@ def test_angulo(descriptive_table, value):
     assert value in descriptive_table._table["Ang"]
 
 
-@pytest.mark.parametrize("value", [23.5, 38.5, 48.5, 57.5, 75.5, 87.5])
-def test_valor_de_v0_devem_ser_x(descriptive_table, value):
-    assert value in descriptive_table.v0()
+@pytest.mark.parametrize("value", [35.286, 22.286, 9.286, 3.714, 16.714, 29.714])
+def test_valor_de_desvio_devem_ser_(descriptive_table, value):
+    assert value in descriptive_table.deviation()
 
 
-@pytest.mark.parametrize("value", [117.5, 115.5, 291.0, 575.0, 377.5, 525.0])
-def test_valores_de_v1_devem_ser_x(descriptive_table, value):
-    assert value in descriptive_table.v1()
+@pytest.mark.parametrize("value", [1245.102, 496.666, 86.23, 13.794, 279.358, 882.922])
+def test_valores_de_v1_devem_ser_(descriptive_table, value):
+    assert value in descriptive_table.deviation_v1()
 
 
 @pytest.mark.parametrize(
-    "value", [2761.25, 4446.75, 14113.5, 33062.5, 28501.25, 45937.5]
+    "value", [6225.51, 1489.998, 517.38, 137.94, 1396.79, 5297.532]
 )
-def test_valor_de_v2_devem_ser_x(descriptive_table, value):
-    assert value in descriptive_table.v2()
+def test_valor_de_v2_devem_ser_(descriptive_table, value):
+    assert value in descriptive_table.deviation_v2()
 
 
-def test_valor_da_varianca_de_ser_3788(descriptive_table):
-    assert descriptive_table.get_varience() == 3788.904
+def test_valor_da_varianca_de_ser_443_093(descriptive_table):
+    assert descriptive_table.get_varience() == 443.093
 
 
-def test_valor_do_desvio_padrao_de_ser_61(descriptive_table):
-    assert descriptive_table.standard_deviation() == 61.554
+def test_valor_do_desvio_padrao_de_ser_21_05(descriptive_table):
+    assert descriptive_table.standard_deviation() == 21.05
 
 
 @pytest.mark.parametrize("value", [3.25, 4.25, 6.25, 7.75, 6.5, 4.25])
-def test_valor_de_fci_devem_ser_x(descriptive_table, value):
+def test_valor_de_fci_devem_ser_(descriptive_table, value):
     assert value in descriptive_table.fci()
 
 
 @pytest.mark.parametrize("value", [142.5, 124.5, 327.0, 675.0, 402.5, 561.0])
-def test_valor_de_xifi_de_ser_x(descriptive_table, value):
+def test_valor_de_xifi_de_ser_(descriptive_table, value):
     assert value in descriptive_table.weighted_average()
 
 
-def test_valor_da_media_deve_ser_x(descriptive_table):
+def test_valor_da_media_deve_ser_(descriptive_table):
     assert descriptive_table.get_average() == 63.786
 
 
