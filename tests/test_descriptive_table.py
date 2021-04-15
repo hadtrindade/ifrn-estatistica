@@ -138,7 +138,7 @@ def test_valor_de_xifi_de_ser_(descriptive_table, value):
     assert value in descriptive_table.weighted_average()
 
 
-def test_valor_da_media_deve_ser_(descriptive_table):
+def test_valor_da_media_deve_ser_63_786(descriptive_table):
     assert descriptive_table.get_average() == 63.786
 
 
@@ -146,5 +146,5 @@ def test_valor_da_mediana_deve_ser_65(descriptive_table):
     assert descriptive_table.get_median() == 65.55
 
 
-def test_valor_da_moda_deve_ser_66(descriptive_table):
-    assert descriptive_table.get_moda() == 66.778
+def test_valor_da_moda_deve_ser_64_714(descriptive_table):
+    assert descriptive_table.get_moda() == 64.714

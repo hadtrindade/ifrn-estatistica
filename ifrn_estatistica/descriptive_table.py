@@ -54,7 +54,7 @@ class DescriptiveTable:
         """
         limite_inferior = min(self.dataset)
         classes = []
-        for i in range(1, self._number_classes + 1):
+        for _ in range(1, self._number_classes + 1):
             classes.append(
                 (
                     round(limite_inferior, self.decimal_places),
@@ -96,7 +96,7 @@ class DescriptiveTable:
         fi = self.simple_frequency()
         Fi = list()
         for i in range(self._number_classes):
-            if i == 0:
+            if not i:
                 Fi.append(fi[i])
             else:
                 Fi.append((Fi[-1] + fi[i]))
@@ -111,14 +111,7 @@ class DescriptiveTable:
         fi = self.simple_frequency()
         fri = list()
         for i in range(self._number_classes):
-            if i == 0:
-                fri.append(
-                    (round(fi[i] / len(self.dataset), self.decimal_places))
-                )
-            else:
-                fri.append(
-                    (round(fi[i] / len(self.dataset), self.decimal_places))
-                )
+            fri.append((round(fi[i] / len(self.dataset), self.decimal_places)))
         self._table["fri"] = fri
         return fri
 
@@ -132,7 +125,7 @@ class DescriptiveTable:
         fri = self.simple_relative_frequency()
         Fri = list()
         for i in range(self._number_classes):
-            if i == 0:
+            if not i:
                 Fri.append(
                     (round(fi[i] / len(self.dataset), self.decimal_places))
                 )
@@ -161,16 +154,12 @@ class DescriptiveTable:
         :return: list
         """
         fri = self.simple_relative_frequency()
-        percentage_values = list()
+        percentage_values = []
         for i in range(self._number_classes):
-            if i == 0:
-                percentage_values.append(
-                    (round((fri[i] * 100), self.decimal_places))
-                )
-            else:
-                percentage_values.append(
-                    (round((fri[i] * 100), self.decimal_places))
-                )
+            percentage_values.append(
+                (round((fri[i] * 100), self.decimal_places))
+            )
+
         self._table["%"] = percentage_values
         return percentage_values
 
@@ -182,10 +171,7 @@ class DescriptiveTable:
         Fri = self.cumulative_relative_frequency()
         angle_values = list()
         for i in range(self._number_classes):
-            if i == 0:
-                angle_values.append(round((Fri[i] * 360), self.decimal_places))
-            else:
-                angle_values.append(round((Fri[i] * 360), self.decimal_places))
+            angle_values.append(round((Fri[i] * 360), self.decimal_places))
         self._table["Ang"] = angle_values
         return angle_values
 
@@ -197,7 +183,7 @@ class DescriptiveTable:
         fi = self.simple_frequency()
         fci = list()
         for i in range(self._number_classes):
-            if i == 0:
+            if not i:
                 fci.append(((2 * fi[i]) + fi[(i + 1)]) / 4)
             else:
                 try:
@@ -299,41 +285,28 @@ class DescriptiveTable:
         :return: float
         """
         classes = self.classes()
-        avarege = self.get_average()
         fi = self.simple_frequency()
-        for cm in range(self._number_classes):
-            if avarege >= classes[cm][0] and avarege < classes[cm][1]:
-                if cm == 0:
-                    moda = round(
-                        classes[cm][0]
-                        + ((fi[cm]) / ((2 * fi[cm]) - fi[(cm + 1)]))
-                        * self._amplitude,
-                        self.decimal_places,
+        modal_number = round(
+            sum(self.weighted_average()) / len(self.dataset),
+            self.decimal_places,
+        )
+        moda = 0
+        for i in range(self._number_classes):
+            if modal_number >= classes[i][0] and modal_number <= classes[i][1]:
+                previous_fi = fi[(i - 1)] if i else 0
+                later_fi = (
+                    fi[(i + 1)] if i == (self._number_classes - 1) else 0
+                )
+                # moda = classes[i][0] + ((fi[i] - previous_fi)/((fi[i] - previous_fi) + (fi[i] - later_fi)))*self.amplitude_classes()
+                moda = (
+                    classes[i][0]
+                    + (
+                        (fi[i] - previous_fi)
+                        / ((2 * fi[i]) - (previous_fi + later_fi))
                     )
-                else:
-                    try:
-                        moda = round(
-                            classes[cm][0]
-                            + (
-                                (fi[cm] - fi[(cm - 1)])
-                                / (
-                                    (2 * fi[cm])
-                                    - (fi[(cm - 1)] + fi[(cm + 1)])
-                                )
-                            )
-                            * self._amplitude,
-                            self.decimal_places,
-                        )
-                    except IndexError:
-                        moda = round(
-                            classes[cm][0]
-                            + (
-                                (fi[cm] - fi[(cm - 1)])
-                                / ((2 * fi[cm]) - (fi[(cm - 1)]))
-                            )
-                            * self._amplitude,
-                            self.decimal_places,
-                        )
+                    * self.amplitude_classes()
+                )
+
         self._table["MODA"] = [moda]
         return round(moda, self.decimal_places)
 
@@ -346,16 +319,17 @@ class DescriptiveTable:
         fi = self.simple_frequency()
         h = self._amplitude
         Fi = self.cumulative_frequency()
-        cmd = sum(fi) / 2
+        range_fi = sum(fi) / 2
         median = 0
-        for icmd in range(len(Fi)):
-            if icmd == 0:
-                if 0 <= cmd <= Fi[icmd]:
-                    median = classes[icmd][0] + ((cmd / fi[icmd]) * h)
-            if Fi[(icmd - 1)] <= cmd <= Fi[icmd]:
-                median = classes[icmd][0] + (
-                    ((cmd - Fi[(icmd - 1)]) / fi[icmd]) * h
+        for i in range(len(Fi)):
+            if not i:
+                if range_fi <= Fi[i]:
+                    median = classes[i][0] + ((range_fi / fi[i]) * h)
+            if range_fi >= (Fi[(i - 1)] + 1) and range_fi <= Fi[i]:
+                median = classes[i][0] + (
+                    ((range_fi - Fi[(i - 1)]) / fi[i]) * h
                 )
+
         self._table["Mediana"] = [round(median, self.decimal_places)]
         return round(median, self.decimal_places)
 
