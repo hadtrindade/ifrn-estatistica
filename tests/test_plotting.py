@@ -2,7 +2,6 @@ from unittest.mock import Mock
 import pytest
 from ifrn_estatistica.descriptive_table import DescriptiveTable
 from ifrn_estatistica.plotting_graphs import PlottingGraphs
-from ifrn_estatistica.probability import Probability
 
 
 dataset = [
@@ -81,6 +80,7 @@ def test_normal_distribution_chart(plotting):
     table = DescriptiveTable(dataset=dataset, decimal_places=3)
     mu = table.get_average()
     sigma = table.standard_deviation()
-    probability = Probability(x1=50, x2=74, mu=mu, sigma=sigma)
-    z1, z2 = probability.normalize()
-    assert plotting.distribution_chart(z1=z1, z2=z2) is None
+    from math import sqrt
+
+    t = (50 - mu) / (sigma / sqrt(len(dataset)))
+    assert plotting.distribution_chart(t, _type="student") is None
