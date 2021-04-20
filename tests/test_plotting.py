@@ -50,7 +50,7 @@ def plotting(mocker):
     get_mock = mocker.patch("ifrn_estatistica.plotting_graphs.pyplot.show")
     get_mock.return_value = respose_mock
 
-    table = DescriptiveTable(dataset, 3)
+    table = DescriptiveTable(dataset=dataset, decimal_places=3)
     classes = table.classes()
     porcentagem = table.percentage()
     fci = table.fci()
@@ -74,3 +74,13 @@ def test_simple_graph(plotting):
 
 def test_histogram_chart_bars(plotting):
     assert plotting.histogram_chart_bars() is None
+
+
+def test_normal_distribution_chart(plotting):
+    table = DescriptiveTable(dataset=dataset, decimal_places=3)
+    mu = table.get_average()
+    sigma = table.standard_deviation()
+    from math import sqrt
+
+    t = (50 - mu) / (sigma / sqrt(len(dataset)))
+    assert plotting.distribution_chart(t, _type="student") is None

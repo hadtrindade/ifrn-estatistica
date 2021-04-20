@@ -13,13 +13,14 @@ def gen_table(dict_dataset):
 
     for k in dict_dataset.keys():
         print(k)
-        table = DescriptiveTable(dict_dataset[k], 3)
+        table = DescriptiveTable(dataset=dict_dataset[k], decimal_places=3)
         classes = table.classes()
         table.simple_frequency()
         table.cumulative_frequency()
         table.simple_relative_frequency()
         table.cumulative_relative_frequency()
         table.middle_point()
+        mu = table.get_average()
         porcentagem = table.percentage()
         fci = table.fci()
         table.angle()
@@ -29,8 +30,12 @@ def gen_table(dict_dataset):
         table.get_moda()
         table.get_varience()
         table.get_median()
-        table.standard_deviation()
+        sigma = table.standard_deviation()
         table.generate_table()
+        from math import sqrt
+
+        t1 = (100 - mu) / (sigma / sqrt(len(table.dataset)))
+        t2 = (1700 - mu) / (sigma / sqrt(len(table.dataset)))
 
         plot = PlottingGraphs(
             dataset=dict_dataset[k],
@@ -42,6 +47,13 @@ def gen_table(dict_dataset):
         plot.histogram_chart_bars()
         plot.histogram_chart()
         plot.pie_chart()
+        plot.distribution_chart(
+            title=k,
+            value1=t1,
+            value2=t2,
+            df=len(table.dataset),
+            _type="student",
+        )
 
 
 if __name__ == "__main__":
