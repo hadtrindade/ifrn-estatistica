@@ -6,3 +6,4 @@ lxml
 parsel
 httpx
 matplotlib
+scipy
