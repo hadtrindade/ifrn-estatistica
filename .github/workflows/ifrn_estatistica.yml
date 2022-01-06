@@ -36,7 +36,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest tests/ -v --cov=ifrn_estatistica
+        pytest -s tests/ -v -k "not slow" --cov=ifrn_estatistica --cov-config=.coveragerc
     - name: codecov
       run: |
         codecov
