@@ -1,9 +1,8 @@
-from typing import NoReturn, List
-from typing import Union
+from typing import List, NoReturn, Union
+
+import numpy as np
 from matplotlib import pyplot
 from scipy import stats
-import numpy as np
-
 
 numeric = Union[int, float, complex]
 
@@ -59,7 +58,9 @@ class PlottingGraphs:
             for i in range(len(self.classes))
         ]
 
-    def histogram_chart(self,) -> NoReturn:
+    def histogram_chart(
+        self,
+    ) -> NoReturn:
         """Método para geração de grafico histograma.
 
         :return: None

@@ -1,9 +1,10 @@
 numpy
 pandas
 tabulate
-prompt-toolkit
 lxml
-parsel
 httpx
 matplotlib
+parsel
 scipy
+isort
+

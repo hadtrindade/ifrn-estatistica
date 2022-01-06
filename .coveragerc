@@ -1,0 +1,2 @@
+[run]
+omit = ifrn_estatistica/emparn_old_site.py

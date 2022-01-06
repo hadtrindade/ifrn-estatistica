@@ -1,5 +1,6 @@
-from typing import List, NoReturn
 from math import log, sqrt
+from typing import List, NoReturn
+
 import numpy as np
 from tabulate import tabulate
 

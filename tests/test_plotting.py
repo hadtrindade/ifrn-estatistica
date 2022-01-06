@@ -1,8 +1,9 @@
 from unittest.mock import Mock
+
 import pytest
+
 from ifrn_estatistica.descriptive_table import DescriptiveTable
 from ifrn_estatistica.plotting_graphs import PlottingGraphs
-
 
 dataset = [
     70,

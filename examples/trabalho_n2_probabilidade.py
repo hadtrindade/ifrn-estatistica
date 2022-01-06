@@ -1,8 +1,10 @@
 from math import sqrt
+
 from pandas import read_csv
+from scipy import stats
+
 from ifrn_estatistica.descriptive_table import DescriptiveTable
 from ifrn_estatistica.plotting_graphs import PlottingGraphs
-from scipy import stats
 
 
 def get_dataset():
@@ -105,7 +107,10 @@ def gen_table(dict_dataset):
             f"Probabilidade de chover acima de 600mm em {k} é {round((1 - probabilidade)*100, 3)}%"
         )
         plot.distribution_chart(
-            title=k, value1=t1, df=len(table.dataset) - 1, _type="student",
+            title=k,
+            value1=t1,
+            df=len(table.dataset) - 1,
+            _type="student",
         )
 
         t1, t2, probabilidade = probabilidade_dado_um_intervalo(
@@ -142,7 +147,10 @@ def gen_table(dict_dataset):
                 f"Percentual para {round(x, 3)}mm é: {round(probabilidade*100, 3)}%"
             )
             plot.distribution_chart(
-                title=k, value2=t, df=len(table.dataset) - 1, _type="student",
+                title=k,
+                value2=t,
+                df=len(table.dataset) - 1,
+                _type="student",
             )
 
 

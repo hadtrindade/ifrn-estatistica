@@ -16,5 +16,10 @@ install:
 
 
 test:
-	pytest  -s tests/ -v --cov=ifrn_estatistica
+	pytest -s tests/ -v --cov=ifrn_estatistica --cov-config=.coveragerc
 
+isort:
+	isort --recursive ifrn_estatistica
+
+black:
+	black -l 79 ifrn_estatistica
