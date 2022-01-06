@@ -1,9 +1,13 @@
 from datetime import datetime
 
+import pytest
+
 from ifrn_estatistica.emparn import (accumulated_annual_rainfall,
                                      get_city_stations)
 
 
+
+@pytest.mark.slow
 def test_emparn():
     city_stations = get_city_stations()
     response = accumulated_annual_rainfall(
